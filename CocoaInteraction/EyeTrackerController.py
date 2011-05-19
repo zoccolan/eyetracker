@@ -29,7 +29,7 @@ mw_enabled = False
 
 try:
     sys.path.append("/Library/Application Support/MonkeyWorks/Scripting/Python")
-    import monkeyworks.conduit as mw_conduit
+    import monkeyworks.conduit as mw_conduit 
     GAZE_H = 0
     GAZE_V = 1
     PUPIL_RADIUS = 2
