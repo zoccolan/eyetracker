@@ -209,12 +209,12 @@ class EyeTrackerController (NSObject):
         NSApp().setDelegate_(self)
         
         # Added by DZ to deal with rigs without power zoom and focus
-        self.no_powerzoom = False
+        self.no_powerzoom = True
         
         self.use_simulated = False
 
 
-        use_file_for_cam = True
+        use_file_for_cam = False
         
         self.simulated_eye_x = 0.0
         self.simulated_eye_y = 0.0
@@ -229,13 +229,13 @@ class EyeTrackerController (NSObject):
         if self.use_simulated:
             esp300 = SimulatedStageController()
         else:
-            esp300 = ESP300StageController("169.254.0.9", 8001)
+            esp300 = ESP300StageController("169.254.0.11", 100)
 
             try:
                 esp300.connect()
             except Exception as e:
                 print("Restarting serial bridge")
-                kick_in_the_pants = httplib.HTTPConnection('169.254.0.9', 80, timeout=10)
+                kick_in_the_pants = httplib.HTTPConnection('169.254.0.11', 80, timeout=10)
                 kick_in_the_pants.request("GET", "/goforms/resetUnit?")
                 time.sleep(5)
                 esp300.connect()
@@ -251,7 +251,7 @@ class EyeTrackerController (NSObject):
             if self.use_simulated:
                 esp300_2 = SimulatedStageController()
             else:
-                esp300_2 = ESP300StageController("169.254.0.9", 8002)
+                esp300_2 = ESP300StageController("169.254.0.12", 100)
                 esp300_2.connect()
         
         self.zoom_and_focus = FocusAndZoomController(esp300_2)
@@ -286,7 +286,7 @@ class EyeTrackerController (NSObject):
         if(self.use_simulated):
             self.leds = SimulatedLEDController(4)
         else:
-            self.leds = MightexLEDController("169.254.0.9", 8006)
+            self.leds = MightexLEDController("169.254.0.10", 100)
             self.leds.connect()
         
         # camera and feature finders 
@@ -346,7 +346,7 @@ class EyeTrackerController (NSObject):
         
         if use_file_for_cam:
             #self.camera_device = FakeCameraDevice(self.feature_finder, "/Users/davidcox/Repositories/svn.coxlab.org/eyetracking/code/EyeTracker/Snapshot.bmp")
-            self.camera_device = FakeCameraDevice(self.feature_finder, "/Users/davidcox/Desktop/albino2/Snapshot2.bmp")
+            self.camera_device = FakeCameraDevice(self.feature_finder, "/Users/labuser/Development/zoccolan_vnsl/eyetracker/Snapshot.bmp")
             self.camera_device.acquire_image()
         
         if self.use_simulated and self.camera_device == None:
